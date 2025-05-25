@@ -265,9 +265,10 @@ void registerUser()
 
     //Kullanici adi al
     printf("Kullanici Adi: ");
-    scanf("%49s", newUser.username);
+    scanf("%39s", newUser.username);
     clearInputBuffer(); // '\n' icin temizle
 
+    // -1 ise kullanici adi musait
     if(findUserByUsername(newUser.username) != -1) {
         printf("Bu kullanici adi zaten alinmis!\n");
         return;
@@ -275,14 +276,14 @@ void registerUser()
 
     //Sifre Al
     printf("Sifre: ");
-    scanf("%49s", newUser.password);
+    scanf("%39s", newUser.password);
     clearInputBuffer(); // '\n' icin temizle
 
     // Kullanici Tipi Al
     printf("Kullanici Tipi (1: Ogrenci, 0: Personel): ");
     scanf("%d", &newUser.isStudent);
 
-    users[numUsers++] = newUser; // Yeni Kullniciyi Diziye Ekle Kullanici Sayisini Artir
+    users[numUsers++] = newUser; // Yeni Kullaniciyi Diziye Ekle Kullanici Sayisini Artir
     saveUsersToFile();
 
     printf("Kullanici Basariyla Kaydedildi!\n");
@@ -299,12 +300,12 @@ int login()
     char password[50];
 
     printf("Kullanici Adi: ");
-    scanf("%49s", username);
+    scanf("%39s", username);
     clearInputBuffer(); // '\n' icin temizle
 
     printf("Sifre: ");
-    scanf("%49s", password);
-    clearInputBuffer();
+    scanf("%39s", password);
+    clearInputBuffer(); // '\n' icin temizle
 
 
     // Admin Kontrolu
@@ -388,34 +389,34 @@ void saveBooksToFile()
 // Dosyadan kitaplari oku
 void loadBooksFromFile()
 {
-    FILE *file = fopen("library.dat", "rb");// binary modda okumak icin
+    FILE *file = fopen("library.dat", "rb"); // binary modda okumak icin
 
     if(file == NULL)
     {
-        return;// Dosya yoksa devam et
+        return; // Dosya yoksa devam et
     }
 
-    fread(&numBooks, sizeof(int), 1, file);// Kitap sayisini oku
-    fread(books, sizeof(Book), numBooks, file);// Kitaplari oku
+    fread(&numBooks, sizeof(int), 1, file); // Kitap sayisini oku
+    fread(books, sizeof(Book), numBooks, file); // Kitaplari oku
 
-    fclose(file);// Dosyayi kapat
+    fclose(file); // Dosyayi kapat
 }
 
 // Kullanicilari dosyaya kaydet
 void saveUsersToFile()
 {
-    FILE *file = fopen("users.dat", "wb");// binary modda yazmak icin
+    FILE *file = fopen("users.dat", "wb"); // binary modda yazmak icin
     
-    if(file == NULL)// Dosya acilamazsa error ver
+    if(file == NULL) // Dosya acilamazsa error ver
     {
         printf("Kullanicilar kaydedilirken hata olustu!\n");
         return;
     }
 
-    fwrite(&numUsers, sizeof(int), 1, file);// kullanici sayisini kaydet
-    fwrite(users, sizeof(User), numUsers, file);// kullanicilari kaydet
+    fwrite(&numUsers, sizeof(int), 1, file); // kullanici sayisini kaydet
+    fwrite(users, sizeof(User), numUsers, file); // kullanicilari kaydet
 
-    fclose(file);// Dosyayi kapat
+    fclose(file); // Dosyayi kapat
 }
 
 // Dosyadan kullanicilari oku
@@ -444,6 +445,7 @@ void addBook()
     // Terminali Temizle
     clearTerminal();
 
+    // Kitap Sayisini Kontrol Et
     if (numBooks >= MAX_BOOKS)
     {
         printf("Maksimum Kitap Sayisina Ulasildi!!!\n");
@@ -458,16 +460,19 @@ void addBook()
     // Kitap Basligini Al
     printf("Kitap Basligi Giriniz: ");
     fgets(newBook.title, sizeof(newBook.title), stdin);
+
     newBook.title[strcspn(newBook.title , "\n")] = '\0'; // Sondaki newline karakterini NULL yap
 
     // Kitap Yazarini Al
     printf("Yazari Giriniz: ");
     fgets(newBook.author, sizeof(newBook.author), stdin);
+    
     newBook.author[strcspn(newBook.author , "\n")] = '\0'; // Sondaki newline karakterini NULL yap
 
     // Kitap Kategorisi Al
     printf("Kategori Giriniz: ");
     fgets(newBook.category, sizeof(newBook.category), stdin);
+    
     newBook.category[strcspn(newBook.author , "\n")] = '\0'; // Sondaki newline karakterini NULL yap
 
     books[numBooks++] = newBook; // Yeni Kitabi Diziye Ekle ve Kitap Sayisini Artir
@@ -481,16 +486,16 @@ void updateBook()
     // Terminali Temizle
     clearTerminal();
 
-    int id;
     // Tum Kitaplari Yazdir
     listAllBooks();
-
+    
+    int id;
     printf("Guncellenecek Kitap Id: ");
     scanf("%d", &id);
     clearInputBuffer(); // '\n' icin temizle
 
     // Kitapbi kontrol et
-    int index = findBookById(id); // 
+    int index = findBookById(id); // -1 ise kitap yok
     if (index == -1)
     {
         printf("Kitap Bulunmadi!\n");
@@ -521,22 +526,22 @@ void deleteBook()
     // Terminali Temizle
     clearTerminal();
 
-    int id;
     // Tum Kitaplari Yazdir
     listAllBooks();
     
+    int id;
     printf("Silmek Istediginiz Kitap Id: ");
     scanf("%d", &id);
     clearInputBuffer(); // '\n' icin temizle
 
     // Kitap var mi kontrol et
-    int index = findBookById(id);
+    int index = findBookById(id); // -1 ise kitap yok
     if(index == -1){
         printf("Kitap Bulunamadi!\n");
         return;
     }
 
-    // Kitap oduncte mi kontrol et 0 => oduncete
+    // Kitap oduncte mi kontrol et (0 => oduncte)
     if (!books[index].isAvailable)
     {
         printf("Bu kitap oduncte oldugu icin silinemez!!\n");
@@ -579,8 +584,7 @@ void searchBook()
                 printf("Kitap Bulundu\n");
                 printBook(books[i]);
                 found = 1;
-            }
-        
+            }   
     }
 
     // Kitap Yoksa
@@ -610,11 +614,11 @@ void borrowBook()
         return;
     }
     
-    // Odunc Alma
-    int id;
     // Raflardaki Kitaplari Yazdir
     listAllAvailableBooks();
-
+    
+    // Odunc Alma
+    int id;
     printf("Odunc Alinacak Kitap Id: ");
     scanf("%d", &id);
     clearInputBuffer(); // '\n' icin temizle
@@ -666,10 +670,11 @@ void returnBook()
 
     // Odunc Alidigi Kitap Var mi
     if (currentUser->numBorrowed == 0) {
-        printf("Ödünç aldığınız kitap bulunmamaktadır.\n");
+        printf("Odunc aldiginiz kitap bulunmamaktadir.\n");
         return;
     }
 
+    // Iade Etme
     int id;
     printf("Iade Etmek Istediginiz Kitap ID: ");
     scanf("%d", &id);
@@ -952,7 +957,7 @@ void printUser(User user)
 time_t calculateDueDate()
 {
     time_t now = time(NULL);
-    return now + (BORROWED_DAYS * 24 * 60 * 60); // 15 Gun Ekle
+    return now + (BORROWED_DAYS * 24 * 60 * 60); // 15 Gunu Saniyeye Cevir ve Ekle
 }
 
 // Terminali Temizle
