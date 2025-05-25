@@ -181,8 +181,9 @@ void adminMenu()
         printf("\033[1;34m|\033[0m \033[1;32m4.\033[0m Kitap Sil                          \033[1;34m|\033[0m\n");
         printf("\033[1;34m|\033[0m \033[1;32m5.\033[0m Kitap Ara                          \033[1;34m|\033[0m\n");
         printf("\033[1;34m|\033[0m \033[1;32m6.\033[0m Geciken Kitaplari Listele          \033[1;34m|\033[0m\n");
-        printf("\033[1;34m|\033[0m \033[1;31m7.\033[0m Tum Kullanicilari Listele          \033[1;34m|\033[0m\n");
-        printf("\033[1;34m|\033[0m \033[1;31m8.\033[0m Cikis Yap                          \033[1;34m|\033[0m\n");
+        printf("\033[1;34m|\033[0m \033[1;32m7.\033[0m Tum Kullanicilari Listele          \033[1;34m|\033[0m\n");
+        printf("\033[1;34m|\033[0m \033[1;32m8.\033[0m Tum Kitaplari Listele              \033[1;34m|\033[0m\n");
+        printf("\033[1;34m|\033[0m \033[1;31m9.\033[0m Cikis Yap                          \033[1;34m|\033[0m\n");
         printf("\033[1;34m+--------------------------------------+\033[0m\n");
         printf("\033[1;36mSeciminiz:\033[0m ");
 
@@ -198,10 +199,11 @@ void adminMenu()
         case 5: searchBook(); break;
         case 6: listOverDueBooks(); break;
         case 7: listAllUsers(); break;
-        case 8: logout(); break;
+        case 8: listAllBooks(); break;
+        case 9: logout(); break;
         default: printf("Gecersiz Secim!\n");
     }
-    } while (choice != 8 && currentUser != NULL);
+    } while (choice != 9 && currentUser != NULL);
     
 }
 
