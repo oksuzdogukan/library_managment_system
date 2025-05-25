@@ -632,6 +632,7 @@ void borrowBook()
     if (bookIndex == -1)
     {
         printf("Kitap Bulunamadi!!\n");
+        return;
     }
 
     // Kitap Oduncte mi
@@ -695,7 +696,7 @@ void returnBook()
 
     if (borrowedIndex == -1)
     {
-        printf("Bu kitabi Odunc Almamissiniz");
+        printf("Bu kitabi Odunc Almamissiniz!!\n");
         return;
     }
 
